@@ -9,12 +9,11 @@ int		main(int ac, char **av)
 
 void		handle_args(int ac, char **av)
 {
-	int		fd;
 	int		len;
 
-	if (ac != 3 || ac != 2)
+	if (ac > 3 || ac < 2)
 		exit_error("Wrong number of arguments", 1);
-	else if (ac == 2 || ac == 3)
+	else if (ac >= 2)
 	{
 		len = ft_strlen(av[1]);
 		if (len < 4)
@@ -23,8 +22,7 @@ void		handle_args(int ac, char **av)
 			exit_error("Invalid 1st argument", 1);
 	}
 	if (ac == 3 && ft_strncmp("--save", av[2], 7))
-		exit_error("Invalid oprtion : Try '--save'\
-				for save 1st render image");
+		exit_error("Invalid option: Try '--save'", 1);
 }
 
 void	exit_error(char *str, int ret)
