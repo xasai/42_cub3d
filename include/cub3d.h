@@ -20,6 +20,7 @@ typedef struct		s_config
 
 typedef	struct		s_flags
 {
+	unsigned int	line;
 	unsigned char	res:1;
 	unsigned char	no:1;
 	unsigned char	so:1;
@@ -38,16 +39,27 @@ void				exit_error(char *str, int ret);
 void				handle_args(int ac, char **av);
 
 /*
-**	 				cub3d.c
+**	 				conf_cub.c
 */
 void				config_init(t_flags **conf);
+
+/*
+**					parse_cub.c
+*/
+void				parse_cub(char *line, t_flags *config);
+void				parse_resolution(char *line, t_flags *config);
+void				parse_rgb(char *line, t_flags *config);
+unsigned char 		parse_color(char **line, int i);
+void				parse_path(char *line, t_flags *config);
 
 /*
 **					read_cub.c
 */
 void				read_cub(int ac, char **av);
-void				parse_cub(char *line, t_flags *config);
-void				parse_resolution(char *line, t_flags *config);
-void				parse_color(char *line, t_flags *config);
 
+/*
+**					validate_cub.c
+*/
+
+void				validate_path(char *path);
 #endif
