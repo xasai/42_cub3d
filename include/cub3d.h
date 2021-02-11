@@ -13,14 +13,15 @@ typedef struct		s_config
 	char			*so;
 	char			*we;
 	char			*ea;
-	unsigned char	*sprite;
+	char			*sprite;
 	unsigned char	floor[3];
 	unsigned char	ceiling[3];
 }					t_config;
 
 typedef	struct		s_flags
 {
-	unsigned int	line;
+	char			*alloced_line;
+	unsigned int	line_num;
 	unsigned char	res:1;
 	unsigned char	no:1;
 	unsigned char	so:1;
@@ -29,13 +30,14 @@ typedef	struct		s_flags
 	unsigned char	sprite:1;
 	unsigned char	floor:1;
 	unsigned char	ceiling:1;	
+	unsigned int	option:1;
 	t_config		values;
 }					t_flags;
 
 /*
 **					main.c
 */
-void				exit_error(char *str, int ret);
+void				exit_error(char *str, t_flags *conf, int ret);
 void				handle_args(int ac, char **av);
 
 /*
@@ -49,17 +51,18 @@ void				config_init(t_flags **conf);
 void				parse_cub(char *line, t_flags *config);
 void				parse_resolution(char *line, t_flags *config);
 void				parse_rgb(char *line, t_flags *config);
-unsigned char 		parse_color(char **line, int i);
+unsigned char 		parse_color(char **line, t_flags *conf, int i);
 void				parse_path(char *line, t_flags *config);
 
 /*
 **					read_cub.c
 */
 void				read_cub(int ac, char **av);
+void				read_map(char *line, t_flags *config);
 
 /*
 **					validate_cub.c
 */
 
-void				validate_path(char *path);
+void				validate_path(char *path, t_flags *config);
 #endif
