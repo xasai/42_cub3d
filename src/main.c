@@ -25,7 +25,16 @@ void		handle_args(int ac, char **av)
 		exit_error("Invalid option: Try '--save'", NULL, 1);
 }
 
-void	exit_error(char *str, t_flags *config, int ret)
+
+/*
+**
+** return value
+** 1 => just exit and print errormessage		|
+** 2 => problem with allocation			|
+** 3 =>	.cub file error, also clear struct 		|
+** 4 =>	map error, also clear struct and list	|
+*/
+void	exit_error(char *str, t_conf *conf, int ret)
 {
 	char	*tmp;
 
@@ -33,12 +42,12 @@ void	exit_error(char *str, t_flags *config, int ret)
 	if (ret == 3)
 		write(2, "When reading .cub: ", 19);
 	write(2, str, ft_strlen(str));
-	if (ret == 3)
+	if (ret == 3 || ret == 4)
 	{
-		write(2, " line <", 7);
-		tmp = ft_itoa(config->line_num);
+		write(2, " (line ", 7);
+		tmp = ft_itoa(conf->line_num);
 		write(2, tmp, ft_strlen(tmp));
-		write(2, ">", 1);	
+		write(2, ")", 1);	
 	}
 	write(2, "\n", 1);
 	exit(ret);

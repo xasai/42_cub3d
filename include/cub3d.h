@@ -5,8 +5,33 @@
 #include <sys/stat.h>
 #include "libft.h"
 
-typedef struct		s_config
+typedef	struct		s_map
 {
+	char			**map;
+	int				x;
+	int				y;
+	int				player_x;
+	int				player_y;
+	char			player;
+}					t_map;
+
+typedef	struct		s_f
+{
+	unsigned short	flag;
+	unsigned char	res:1;
+	unsigned char	no:1;
+	unsigned char	so:1;
+	unsigned char	we:1;
+	unsigned char	ea:1;
+	unsigned char	sprite:1;
+	unsigned char	floor:1;
+	unsigned char	ceiling:1;	
+	unsigned char	option:1;
+}					t_f;
+
+typedef struct		s_conf
+{
+	int				line_num;
 	int				res_x;
 	int				res_y;
 	char			*no;
@@ -16,53 +41,51 @@ typedef struct		s_config
 	char			*sprite;
 	unsigned char	floor[3];
 	unsigned char	ceiling[3];
-}					t_config;
-
-typedef	struct		s_flags
-{
-	char			*alloced_line;
-	unsigned int	line_num;
-	unsigned char	res:1;
-	unsigned char	no:1;
-	unsigned char	so:1;
-	unsigned char	we:1;
-	unsigned char	ea:1;
-	unsigned char	sprite:1;
-	unsigned char	floor:1;
-	unsigned char	ceiling:1;	
-	unsigned int	option:1;
-	t_config		values;
-}					t_flags;
+	t_map			*map;
+	t_f				f;	
+}					t_conf;
 
 /*
-**					main.c
+**============================================================
+**						main.c
 */
-void				exit_error(char *str, t_flags *conf, int ret);
 void				handle_args(int ac, char **av);
+void				exit_error(char *str, t_conf *conf, int ret);
 
 /*
-**	 				conf_cub.c
+**============================================================
+**		 				conf_cub.c
 */
-void				config_init(t_flags **conf);
+
+void				conf_init(t_conf **conf);
 
 /*
-**					parse_cub.c
+**============================================================
+**						parse_cub.c
 */
-void				parse_cub(char *line, t_flags *config);
-void				parse_resolution(char *line, t_flags *config);
-void				parse_rgb(char *line, t_flags *config);
-unsigned char 		parse_color(char **line, t_flags *conf, int i);
-void				parse_path(char *line, t_flags *config);
+
+void				parse_cub(char *line, t_conf *conf);
+void				parse_resolution(char *line, t_conf *conf);
+void				parse_rgb(char *line, t_conf *conf);
+char				parse_color(char **line, t_conf *conf, int i);
+void				parse_path(char *line, t_conf *conf);
 
 /*
-**					read_cub.c
+**============================================================
+**						read_cub.c
 */
-void				read_cub(int ac, char **av);
-void				read_map(char *line, t_flags *config);
+void					read_cub(int ac, char **av);
+void					read_map(int fd, t_conf *conf);
+/*
+**============================================================
+**						validate_cub.c
+*/
+void 					validate_path(char *line, t_conf *conf);
 
 /*
-**					validate_cub.c
+**============================================================
+**						memclr.c
 */
 
-void				validate_path(char *path, t_flags *config);
+void				lst_clear(t_list *lst);
 #endif
