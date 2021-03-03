@@ -52,6 +52,10 @@ typedef struct		s_list
 	struct s_list	*next;
 }					t_list;
 
+/*
+**============================================================
+**					libft	
+*/
 void				ft_bzero(void *s, size_t n);
 void				*ft_memmove(void *dst, const void *src, size_t len);
 void				*ft_memset(void *b, int c, size_t len);
@@ -105,6 +109,12 @@ int					ft_ctod(char c);
 int					ft_intwid(long int i, int base);
 void				ft_putnbr_base(long int i, const char *base);
 int					ft_skip_atoi(char **s);
+int					ft_isempty_str(char *str);
+
+/*
+**============================================================
+**					get_next_line
+*/
 int					get_next_line(int fd, char **line);
 int					read_line(int fd, char **line,\
 					t_rem *rm, t_head **lst_head);
@@ -116,4 +126,5 @@ int					gnl_clear(t_head *head, t_rem\
 					*remainder, char **line, int ret);
 int					rebuild_remainder(t_rem *remainder,\
 					int endl, char **line, t_head *lst_head);
+
 #endif

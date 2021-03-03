@@ -49,6 +49,7 @@ typedef struct		s_conf
 **============================================================
 **						main.c
 */
+
 void				handle_args(int ac, char **av);
 void				exit_error(char *str, t_conf *conf, int ret);
 
@@ -57,7 +58,7 @@ void				exit_error(char *str, t_conf *conf, int ret);
 **		 				conf_cub.c
 */
 
-void				conf_init(t_conf **conf);
+void				config_init(t_conf **conf);
 
 /*
 **============================================================
@@ -74,13 +75,18 @@ void				parse_path(char *line, t_conf *conf);
 **============================================================
 **						read_cub.c
 */
-void					read_cub(int ac, char **av);
-void					read_map(int fd, t_conf *conf);
+
+void				read_cub(int ac, char **av);
+void				read_map(int fd, t_conf *conf);
+void				append_lst(char *line, t_list **lst_head, t_conf *conf);
+void				make_map(t_map *map_t, t_list **lst_head, t_conf *conf);
+
 /*
 **============================================================
 **						validate_cub.c
 */
-void 					validate_path(char *line, t_conf *conf);
+
+void 				validate_path(char *line, t_conf *conf);
 
 /*
 **============================================================
@@ -88,4 +94,5 @@ void 					validate_path(char *line, t_conf *conf);
 */
 
 void				lst_clear(t_list *lst);
+
 #endif

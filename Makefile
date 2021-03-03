@@ -9,7 +9,7 @@ CC := gcc -Wall -Wextra -Werror -g
 all: $(NAME)
 
 $(NAME): $(LIB) $(OBJDIR) $(OBJ) 
-	$(CC) $(OBJ) $(INC) -o $(NAME)
+	$(CC) $(OBJ) $(INC) $(LIB) -o $(NAME)
 
 $(OBJDIR)%.o:%.c
 	$(CC) -c $< $(INC) -o $@		
