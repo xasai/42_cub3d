@@ -6,3 +6,4 @@ void	config_init(t_conf **conf)
 			!((*conf)->map = ft_calloc(sizeof((*conf)->map), 1)))
 		exit_error("In function 'config_init' when allocate memory", *conf, 2);
 }
+

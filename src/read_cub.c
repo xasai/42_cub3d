@@ -11,17 +11,15 @@ void				read_cub(int ac, char **av)
 	if (fd < 0)
 		exit_error("When trying to open .cub file", conf, 2);
 	config_init(&conf);
-	while (conf->f.flag != 8 && (ret = get_next_line(fd, &line)) > 0)
+	while (conf->f.flag < 8 && (ret = get_next_line(fd, &line)) > 0)
 	{
 		parse_cub(line, conf);
 		free(line);
 	}
-	if (ret < 0)
+	if (ret < 0 || conf->f.flag != 8)
 		exit_error("When reading .cub file", conf, 3);
-	else if (conf->f.flag == 8)
-		read_map(fd, conf);
 	else
-		exit_error("Invalid .cub file", conf, 3);
+		read_map(fd, conf);
 	if (ac == 3)
 		conf->f.option = 1;
 	close(fd);
@@ -30,63 +28,54 @@ void				read_cub(int ac, char **av)
 void				read_map(int fd, t_conf *conf)
 {
 	int				ret;
-	int				was_empty;
 	char			*line;
-	t_list			*lst_head;
-	
-	was_empty = 0;
+	t_maphead		maphead;
+
+	maphead = (t_maphead){0};
 	while ((ret = get_next_line(fd, &line)) > 0)
 	{
-		if (!was_empty && ft_isempty_str(line) &&
-				(was_empty = 1))
-			append_lst(line, &lst_head, conf);
-		else if (!ft_isempty_str(line))
-		{
-			conf->map->x = ret > conf->map->x ? ret : conf->map->x;
-			append_lst(line, &lst_head, conf);
-			was_empty = 0;
-		}
-		else
-			free(line);
+		ret = append_maplst(line, ft_strlen(line), &maphead);
+		if (ret)
+			free(line); // skip all empty lines at start 
+		if (ret == -1)
+			exit_error("When allocating memory", conf, 4);
+		else if (ret == -2)
+			exit_error("Bad empty line in map", conf, 4);
 	}
 	if (ret < 0)
-		exit_error("When allocating memory", conf, 4);
-	make_map(conf->map, &lst_head, conf); 
-}
-
-void				make_map(t_map *map_t, t_list **lst_head, t_conf *conf)
-{
-	t_list			*cur;
-	int				i;	
-	char			**map;
-
-	cur = ft_lstlast(*lst_head);
-	i = ft_strlen(cur->content);
-	if (!ft_isempty_str(cur->content))
-		map_t->x = map_t->x > i ? map_t->x : i;
-	if (!(map = malloc(sizeof(*map) * map_t->y)))
-		exit_error("When allocating memory", conf, 4);
-	i = -1;
-	while (++i < map_t->y)
 	{
-		cur = *lst_head;
-		if (!(map[i] = ft_calloc(sizeof(char), map_t->x)))
-			exit_error("When allocating memory", conf, 4);
-		ft_memset(map[i], ' ', map_t->x - 1);
-		ft_memcpy(map[i], cur->content, ft_strlen(cur->content));
-		*lst_head = (*lst_head)->next;
-		free(cur->content);
-		free(cur);
+		free(line);
+		exit_error("Bad empty line in map", conf, 4);
 	}
-	map_t->map = map;
+	conf->map = get_map(&maphead);
+	for (size_t i=0;i < conf->map->y;i++)
+		printf("%s\n", conf->map->matrix[i]);
 }
 
-void				append_lst(char *line, t_list **lst_head, t_conf *conf)
+int					append_maplst(char *line, size_t len, t_maphead *h)
 {
-	t_list			*lst_new;
+	t_maplst		*new;
 	
-	if (!(lst_new = ft_lstnew(line)))
-		exit_error("When allocating memory", conf, 4);
-	(ft_lstlast(*lst_head))->next = lst_new;
-	conf->map->y++;
+	if ((!h->head && ft_isempty_str(line)) || (*line &&
+			h->head && !*(h->tail->line) && ft_isempty_str(line))) 
+		return (1);
+	if (h->head && *line && !*(h->tail->line))
+		return (lst_clear(h->head, -2));
+	new = ft_calloc(sizeof(*new), 1);
+	if  (!new)
+		return (lst_clear(h->head, -1));
+	(*new) = (t_maplst){.next = NULL, .line = line, .len = len};
+	if (ft_isempty_str(line))
+		new->len = 0;
+	if (!h->head)
+	{
+		h->tail = new;
+		h->head = new;
+	}
+	else
+	{
+		h->tail->next = new;
+		h->tail = new;
+	}
+	return (0);
 }

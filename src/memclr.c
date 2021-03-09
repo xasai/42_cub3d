@@ -1,16 +1,26 @@
 #include "cub3d.h"
 
-void	lst_clear(t_list *lst)
+int				lst_clear(t_maplst *head, int ret)
 {
-	t_list *next;
+	t_maplst 	*next;
 
-	if (!lst)
-		return ; 
-	while (lst)
+	while (head)
 	{
-		free(lst->content);
-		next = lst->next;
-		free(lst);
-		lst = next;
+		next = head->next;
+		free(head->line);
+		free(head);
+		head = next;
 	}
+	return (ret);
+}
+
+int				matrix_clear(char **matrix, size_t i)
+{
+	size_t		k;
+	
+	k = 0;
+	while (k < i)
+		free(matrix[k++]);
+	free(matrix);
+	return (1);
 }
