@@ -1,33 +1,53 @@
 NAME := cub3D
-LIB := libft/libft.a
-INC := -Iinclude
-OBJ := $(subst src/,obj/,$(patsubst %.c,%.o,$(wildcard src/*.c)))
-OBJDIR := obj/
-VPATH := src
-CC := gcc -Wall -Wextra -Werror -g
 
-all: $(NAME)
+SRC := $(shell find src/ -type f -name '*.c')
+OBJ := $(subst src/, obj/, $(SRC:.c=.o)) 
 
-$(NAME): $(LIB) $(OBJDIR) $(OBJ) 
-	$(CC) $(OBJ) $(INC) $(LIB) -o $(NAME)
+LIBFT := lib/libft/libft.a
+LIB_MLX := lib/mlx_linux/libmlx_Linux.a 
+LIB := $(LIBFT) $(LIB_MLX) -Llib/mlx_linux -lmlx_Linux -Llib/libft  
+INC := -Iinclude/ -Ilib/mlx_linux -Ilib/libft/include -I/usr/share
+ 
+VPATH := src/															
+OBJPATH := obj/
+OBJDIR := $(subst src/, obj/, $(shell find src/* -type d))
 
-$(OBJDIR)%.o:%.c
-	$(CC) -c $< $(INC) -o $@		
+CC := gcc
+FLAG := -Wall -Wextra -Werror -g3 -std=c99
+DEBUG := 
 
-$(LIB):
-	make -C libft/
+###################################################################
 
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
+
+all: $(NAME) test
+#all: $(OBJDIR)
+
+test:
+	./$(NAME)  map/1.cub
+
+$(NAME): $(LIBFT) $(LIB_MLX) $(OBJDIR) $(OBJ) 
+	$(CC) $(FLAG) $(OBJ) $(INC) $(LIB) -lXext -lX11 -lm -lz -o $(NAME) 
+
+$(OBJPATH)%.o:%.c
+	$(CC) $(INC) $(FLAG) -c $< -o $@
+
+$(LIBFT): 
+	make -C $(dir $(LIBFT))
+
+$(LIB_MLX): 
+	make -C $(dir $(LIB_MLX))
+
+$(OBJDIR): 
+	mkdir -p $(OBJDIR) 
 
 clean:
-	rm -rf $(OBJ)
-	make clean -C libft/
+	rm -rf obj/
+	make clean -C lib/libft/
 
 fclean: clean
-	rm -f $(NAME)
-	make fclean -C libft/
+	rm -fr $(NAME) 
+	make fclean -C $(dir $(LIBFT)) 
 
 re: fclean all
 
-.PHONY: re fclean clean $(LIB) all $(NAME)
+.PHONY: re fclean clean $(LIBFT) all $(NAME) test

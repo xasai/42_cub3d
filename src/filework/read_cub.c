@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-void				read_cub(int ac, char **av)
+t_conf				*read_cub(int ac, char **av)
 {
 	int				ret;
 	int				fd;
@@ -10,19 +10,20 @@ void				read_cub(int ac, char **av)
 	fd = open(av[1], O_RDONLY);
 	if (fd < 0)
 		exit_error("When trying to open .cub file", conf, 2);
-	config_init(&conf);
-	while (conf->f.flag < 8 && (ret = get_next_line(fd, &line)) > 0)
+	init_conf(&conf);
+	while (conf->flag ^ 0xff && (ret = get_next_line(fd, &line)) > 0)
 	{
 		parse_cub(line, conf);
 		free(line);
 	}
-	if (ret < 0 || conf->f.flag != 8)
+	if (ret < 0 || conf->flag ^ 0xff) 
 		exit_error("When reading .cub file", conf, 3);
 	else
 		read_map(fd, conf);
 	if (ac == 3)
-		conf->f.option = 1;
+		conf->save_bmp = 1;
 	close(fd);
+	return (conf);
 }
 
 void				read_map(int fd, t_conf *conf)
@@ -32,23 +33,25 @@ void				read_map(int fd, t_conf *conf)
 	t_maphead		maphead;
 
 	maphead = (t_maphead){0};
-	while ((ret = get_next_line(fd, &line)) > 0)
+	ret = get_next_line(fd, &line);
+	while (ret > 0)
 	{
 		ret = append_maplst(line, ft_strlen(line), &maphead);
 		if (ret)
-			free(line); // skip all empty lines at start 
+			free(line);
 		if (ret == -1)
 			exit_error("When allocating memory", conf, 4);
 		else if (ret == -2)
 			exit_error("Bad empty line in map", conf, 4);
+		ret = get_next_line(fd, &line);
 	}
 	if (ret < 0)
 	{
 		free(line);
-		exit_error("Bad empty line in map", conf, 4);
+		exit_error("When read .cub file", conf, 4);
 	}
-	conf->map = get_map(&maphead);
-	for (size_t i=0;i < conf->map->y;i++)
+	get_map(&maphead, conf);
+	for (size_t i=0; i < conf->map->y; i++)
 		printf("%s\n", conf->map->matrix[i]);
 }
 

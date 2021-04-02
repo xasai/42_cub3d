@@ -1,0 +1,21 @@
+March 11:
+	stoped on parse map:
+	
+	+ DELETE empty lines from linked list's END
+	+ Need to check up and down for ' '  from 'NSWE20'
+	+ Need to check is first and last contains only  '1' and ' '
+	+ Also need validate if thereis only one hero;
+
+March 20: first steps
+	window creation
+
+
+
+
+
+
+
+.GLOBAL:
+	set get_screen_size when R is greater;
+	
+	free_all;

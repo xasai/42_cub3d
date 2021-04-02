@@ -18,9 +18,8 @@ void 				parse_cub(char *line, t_conf *conf)
 
 void				parse_resolution(char *line, t_conf *conf)
 {
-	if (conf->f.res)
+	if (conf->flag & 0x01)
 		exit_error("double R occuriance", conf, 3);
-	conf->f.res = 1;
 	if (!ft_isspace(*line))
 		exit_error("Missing space after R", conf, 3);
 	conf->res_x = ft_skip_atoi(&line);
@@ -31,41 +30,47 @@ void				parse_resolution(char *line, t_conf *conf)
 		line++;
 	if (*line)
 		exit_error("bad symbol at the end of R field", conf, 3);
-	conf->f.flag++;
+	conf->flag |= 0x01;
 }
 
 void				parse_rgb(char *line, t_conf *conf)
 {
-	unsigned char	*rgb;
+	char 			*rgb;
 	int				i;
 
-	if (conf->f.ceiling && *line == 'C')
+	i = 3;
+	rgb = NULL;
+	if (conf->flag & 0x02 && *line == 'C')
 		exit_error("double C occuriance", conf, 3);
-	else if (conf->f.floor && *line == 'F')
+	else if (conf->flag & 0x04 && *line == 'F')
 		exit_error("double F occuriance", conf, 3);
-	if (*line == 'C' && (conf->f.ceiling = 1))
-		rgb = conf->ceiling;
-	else if (*line == 'F' && (conf->f.floor = 1))
-		rgb = conf->floor;
+	else if (*line == 'C')
+	{
+		rgb = (char *)&conf->ceiling;
+		conf->flag |= 0x02;
+	}
+	else if (*line == 'F')
+	{
+		rgb = (char *)&conf->floor;
+		conf->flag |= 0x04;
+	}
 	if (!ft_isspace(*++line))
 		exit_error("no space after specificator", conf, 3);
-	i = -1;
-	while (++i < 3)
+	while (--i >= 0)
 		rgb[i] = parse_color(&line, conf, i);
 	while (ft_isspace(*line))
 		line++;
 	if (*line)
-		exit_error("bad symbol at the end of field", conf, 3);
-	conf->f.flag++;
+		exit_error("bad symbol at the end of color field", conf, 3);
 }
 
 char		 		parse_color(char **line, t_conf *conf, int i)
 {
 	while (ft_isspace(**line))
 		(*line)++;
-	if ((i == 1 || i == 2) && **line != ',')
-		exit_error("Syntax 255,255,255", conf, 3);
-	else if (i == 1 || i == 2)
+	if ((i == 0 || i == 1) && **line != ',')
+		exit_error("Syntax: RGB: 255,127,0", conf, 3);
+	else if (i == 0 || i == 1)
 		(*line)++;
 	while (ft_isspace(**line))
 		(*line)++;
@@ -81,27 +86,42 @@ char		 		parse_color(char **line, t_conf *conf, int i)
 void				parse_path(char *line, t_conf *conf)
 {
 	char 			**path;
-	int				test_fd;	
 
 	path = NULL;
-	if (*line == 'N' && *(line + 1) == 'O' && (conf->f.no = 1))
+	if (*line == 'N' && *(line + 1) == 'O')
 		path = &(conf->no);	
-	else if (*line == 'S' && *(line + 1) == 'O'	&& (conf->f.so = 1))
+	else if (*line == 'S' && *(line + 1) == 'O')
 		path = &(conf->so);	
-	else if (*line == 'W' && *(line + 1) == 'E'	&& (conf->f.we = 1))
+	else if (*line == 'W' && *(line + 1) == 'E')
 		path = &(conf->we);
-	else if (*line == 'S' && (conf->f.sprite = 1))
+	else if (*line == 'S')
 		path = &(conf->sprite);
-	else if (*line == 'E' && *(line + 1) == 'A'	&& (conf->f.ea = 1))
+	else if (*line == 'E' && *(line + 1) == 'A')
 		path = &(conf->ea);
 	else 
-		exit_error("bad setting", conf, 3);
-	line +=	path == &(conf->sprite) ? 1 : 2; 
-	if (!(*path = ft_strtrim(line, "\r\t\n\v ")))
+		exit_error("Bad texture", conf, 3);
+	if (path != &(conf->sprite))
+		line++;
+	line++;
+	*path = ft_strtrim(line, "\t\n\v ");
+	if (!path)
 		exit_error("When allocating memory", conf, 3);
 	validate_path(*path, conf);
-	if ((test_fd = open(*path, O_RDONLY)) < 0)
-		exit_error("error occured while opening texture file", conf, 3);
-	close(test_fd);
-	conf->f.flag++;
+	set_texture_flag(*path, conf);
+}
+ 
+void				set_texture_flag(char *path, t_conf *conf)
+{
+	if (path == conf->no && !(conf->flag & 0x80))
+		conf->flag |= 0x80;
+	else if (path == conf->so && !(conf->flag & 0x30))
+		conf->flag |= 0x40;
+	else if (path == conf->we && !(conf->flag & 0x20))
+		conf->flag |= 0x20;
+	else if (path == conf->ea && !(conf->flag & 0x10))
+		conf->flag |= 0x10;
+	else if (path == conf->sprite && !(conf->flag & 0x08))
+		conf->flag |= 0x08;
+	else 
+		exit_error("Double texture occuriance", conf, 3);
 }
