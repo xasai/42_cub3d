@@ -4,9 +4,7 @@ int	do_graphic_shit(t_overall *x)
 {
 	t_img	*img;
 
-	if (x->img)
-		mlx_destroy_image(x->mlx, x->img->img);
-	img = init_image(x);
+	img = x->img;
 	if (img->img == NULL)
 		exit_error("When alloc memory", x->conf, 5);
 	fill_img(x, x->conf->ceiling);
@@ -19,6 +17,8 @@ void	put_pixel(t_img *data, int pos_x, int pos_y, int rgb)
 {
 	char	*dst;
 
+	if (pos_x < 0 || pos_y < 0)
+		return ;
 	dst = data->addr + (pos_y * data->line_len + pos_x * (data->bpp / 8));
 	*(unsigned int *)dst = rgb;
 }

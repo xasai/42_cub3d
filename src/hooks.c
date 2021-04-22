@@ -8,21 +8,19 @@ int	close_x(int keycode, t_overall *x)
 	return (0);
 }
 
-int move(int keycode, t_overall *x)
+int key_handler(int keycode, t_overall *x)
 {
 	printf("\t\t\t\t\t\e[1;32mKEY [%d]\e[0m\n", keycode);
-	if ((char)keycode == 'w' || keycode == 65362)
+	if (keycode == K_W || keycode == K_AR_U)
 		move_forward(x);
-	else if ((char)keycode == 's' || keycode == 65364)
+	else if (keycode == K_S || keycode == K_AR_D)
 		move_backward(x);
-	else if ((char)keycode == 'a')
-		move_left(x);
-	else if ((char)keycode == 'd')
-		move_right(x);
-	else if (keycode == 65361) 
+	else if (keycode == K_A || keycode == K_AR_L)
 		rot_l(x);
-	else if (keycode == 65363) 
+	else if (keycode == K_D || keycode == K_AR_R)
 		rot_r(x);
+	else if (keycode == K_ESC)
+		exit(0); // FIXME clear after yourself
 	do_graphic_shit(x);
 	return (0);
 }

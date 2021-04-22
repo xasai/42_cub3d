@@ -1,3 +1,4 @@
+###################################################################
 NAME := cub3D
 
 SRC := $(shell find src/ -type f -name '*.c')
@@ -11,16 +12,16 @@ INC := -Iinclude/ -Ilib/mlx_linux -Ilib/libft/include -I/usr/share
 VPATH := src/															
 OBJPATH := obj/
 OBJDIR := $(subst src/, obj/, $(shell find src/* -type d))
-
+																   
 CC := gcc
-FLAG := -Wall -Wextra -Werror -g3 -std=c99
-DEBUG := 
-
-###################################################################
+FLAG := -Wall -Wextra -Werror -g3 -std=c99						   
+####################################################################
 
 
 all: $(NAME) test
-#all: $(OBJDIR)
+
+debug: $(NAME)
+	gdb --args $(NAME) map/1.cub
 
 test:
 	./$(NAME)  map/1.cub

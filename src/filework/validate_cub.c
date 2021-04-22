@@ -46,21 +46,23 @@ int			validate_updown(t_map *map, size_t x, size_t y)
 	char *hero;
 
 	hero = ft_strchr("NSWE", map->matrix[y][x]);
-	if (hero && !map->hero_ch)
-	{
-		map->hero_x = (double)x + 0.50;
-		map->hero_y = (double)y + 0.50;
-		map->hero_ch = map->matrix[y][x];
-		map->hero_a = (*hero == 'N') * N + (*hero == 'S') * S
-			+ (*hero == 'W') * W + (*hero == 'E') * E;
-	}
-	else if (map->hero_ch && hero != NULL)
-		return (1);
 	if (!map->matrix[y - 1][x] || ft_isspace(map->matrix[y - 1][x]))
 			return (1);
 	else if (y < map->y - 1 && (!map->matrix[y + 1][x] 
 			|| ft_isspace(map->matrix[y + 1][x])))
-			return (1);
+		return (1);
+	if (map->hero_x && hero)
+		return (1);
+	else if (hero)
+	{
+		map->hero_x = (double)x + 0.50;
+		map->hero_y = (double)y + 0.50;
+		map->hero_a = (*hero == 'N') * N + (*hero == 'S') * S
+			+ (*hero == 'W') * W + (*hero == 'E') * E;
+		map->matrix[y][x] = '0';
+		map->hero_dx = cos(map->hero_a);
+		map->hero_dy = sin(map->hero_a);
+	}
 	return (0);
 }
 
@@ -92,7 +94,7 @@ int			validate_first_last_line(t_map *map)
 	matrix = map->matrix;
 	while (matrix[0][++x])
 	{
-		if (!ft_isspace(matrix[0][x]) && matrix[0][x]
+		if (!ft_isspace(matrix[0][x])
 				&& matrix[0][x] != '1')
 			return (1);
 	}
@@ -100,7 +102,7 @@ int			validate_first_last_line(t_map *map)
 	y = map->y - 1;
 	while (matrix[y][++x])
 	{
-		if (!ft_isspace(matrix[y][x]) && matrix[y][x]
+		if (!ft_isspace(matrix[y][x])
 				&& matrix[y][x] != '1')
 			return (1);
 	}

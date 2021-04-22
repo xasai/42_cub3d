@@ -31,7 +31,7 @@ void			fill_map(t_conf *conf)
 			printf("%lu\n",y);
 			exit_error("Bad map", conf, 4);
 		}
-	if (!conf->map->hero_ch)
+	if (!conf->map->hero_x)
 		exit_error("Bad map: No hero found [N|W|S|E]", conf, 4);
 }
 

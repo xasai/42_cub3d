@@ -15,8 +15,7 @@ void	print_minimap(t_overall *x)
 		{
 			if (x->map->matrix[i][k] == '1')	
 				print_map_square(x,	0x000000); 
-			else if (x->map->matrix[i][k] == '0'
-				|| x->map->matrix[i][k] == x->map->hero_ch)
+			else if (x->map->matrix[i][k] == '0')
 				print_map_square(x,	0xffffff); 
 			else if (x->map->matrix[i][k] == '2')
 				print_map_square(x,	0xff0000); 
@@ -27,42 +26,30 @@ void	print_minimap(t_overall *x)
 	}
 	print_hero(x);
 	mm_ray(x);
+	mm_dir(x);
 }
 
-void	mm_ray(t_overall *x)
+void 	mm_dir(t_overall *x)
 {
-	float cx;
-	float cy;
+	float px;
+	float py;
+	float dx;
+	float dy;
 
-	x->px.cur_x = x->map->hero_x* (20 * x->scale);
-	x->px.cur_y = x->map->hero_y* (20 * x->scale);
-	float fov =  PI / 3;
-	for (int i = 0;i < x->conf->res_x; i++)
-	{
-		float angle = x->map->hero_a - fov / 2 + fov * i / x->conf->res_x;
-		for (float t=0.0; t<20.0; t+=0.05)
-		{
-			cx = x->map->hero_x + t*cos(angle);
-			cy = x->map->hero_y + t*sin(angle);
-			if (x->map->matrix[(int)cy][(int)cx] == '1'
-			|| x->map->matrix[(int)cy][(int)cx] == '2') break;
-			//printf("\t\t\t\t\t\t\t\e[1;35 %.3f cos x - cosy %.3f\e[0m\n", cx, cy); 
-			int pix_y = cy* 20;
-			int	pix_x = cx * 20;
-			put_pixel(x->img, pix_x, pix_y, 0xff0000);
-			//printf("%d x px y %d\n", pix_x, pix_y); 
-			//printf("%f < ANGLE >\n", angle); 
-		}
-
-	}
-	printf("\e[1;91m\t\t\t\t<PLAYER_ANGLE> [%f]\e[0m\n\n\n", x->map->hero_a); 
+	px = x->map->hero_x * 20 * x->scale;
+	py = x->map->hero_y * 20 * x->scale;
+	dx = x->map->hero_dx;
+	dy = x->map->hero_dy;
+	printf("\e[1;95m\t\t\t\t<DIR X> [%f]  <DIR Y> [%f]\e[0m\n", dx, dy); 
+	for (int i = 0; i < 20; i +=1)
+		put_pixel(x->img, px + dx * i, py + dy * i, 0x00ff00);
 }
 
 void	print_hero(t_overall *x)
 {
 	size_t	size;	
 
-	size = 6 * x->scale;
+	size = 5 * x->scale;
 	printf("\e[1;35m\t\t\t\thero %.3f %.3f\e[0m\n", x->map->hero_x, x->map->hero_y);
 	x->px.cur_x = x->map->hero_x * (20 * x->scale) - size / 2;
 	x->px.cur_y = x->map->hero_y * (20 * x->scale) - size / 2;
