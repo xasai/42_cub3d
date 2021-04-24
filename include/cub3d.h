@@ -1,13 +1,17 @@
 #ifndef CUB3D_H 
 # define CUB3D_H
+
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdint.h>
 #include <math.h>
 #include <mlx.h>
+
 #include "libft.h"
-#include "conf.h"
+#include "struct.h"
+#include "overall.h"
 
 #define PI 3.1415926535
 #define N PI/2
@@ -20,47 +24,6 @@
 # elif __APPLE__
 #  include "macos_key.h"
 # endif 
-
-typedef	struct		s_map
-{
-	char			**matrix;
-	size_t			x;
-	size_t			y;
-	float			hero_x;
-	float			hero_y;
-	float			hero_a;
-	float 			hero_dx;
-	float			hero_dy;
-	float			plane_x;
-	float			plane_y;
-}					t_map;
-
-typedef struct		s_img
-{
-	void 			*img;	
-	char			*addr;
-	int				bpp;
-	int				line_len;
-	int				endian;
-}					t_img;
-
-typedef struct		s_px
-{
-	short int		cur_x;
-	short int		cur_y;
-}					t_px;
-
-typedef struct		s_overall
-{
-	float			scale;
-	t_px			px;
-	t_conf			*conf;
-	t_map			*map;
-	t_img			*img;
-	void			*mlx;
-	void			*win;
-}					t_overall;
-
 
 /*
 **============================================================
@@ -75,10 +38,17 @@ void				exit_error(char *str, t_conf *conf, int ret);
 */
 
 void				init(int ac, char **av);
+
+/*
+**============================================================
+**		 				struct_init.c
+*/
+
 void				init_conf(t_conf **conf);
 void				init_resolution(t_overall *x);
 void				init_hook(t_overall *x);
-t_img				*init_image(t_overall *x);
+void				init_image(t_img **img_ptr, t_overall *x,
+					uint16_t size_x, uint16_t size_y);
 
 /*
 **============================================================
@@ -136,16 +106,15 @@ int					matrix_clear(char **matrix, size_t i);
 */
 int					do_graphic_shit(t_overall *x);
 void				put_pixel(t_img *data, int pos_x, int pos_y, int rgb);
-void				fill_row(t_overall *x, int pos_y, int rgb);
-void				fill_img(t_overall *x, int rgb);
-void				draw_rectangle(t_overall *x, int sizex, int sizey, int rgb);
+void				fill_row(t_img *img, int pos_y, int rgb);
+void				fill_img(t_img *img, int rgb);
+void				draw_rectangle(t_img *x, int sizex, int sizey, int rgb);
 
 /*
 **============================================================
 **						minimap.c
 */
 void				print_minimap(t_overall *x);
-void				mm_ray(t_overall *x);
 void				mm_dir(t_overall *x);
 void				print_map_square(t_overall *x, int rgb);
 void				print_hero(t_overall *x);

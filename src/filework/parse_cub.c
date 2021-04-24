@@ -22,10 +22,10 @@ void				parse_resolution(char *line, t_conf *conf)
 		exit_error("double R occuriance", conf, 3);
 	if (!ft_isspace(*line))
 		exit_error("Missing space after R", conf, 3);
-	conf->res_x = ft_skip_atoi(&line);
+	conf->res_x = (uint16_t)ft_skip_atoi(&line);
 	if (!ft_isspace(*line))
 		exit_error("Bad R field", conf, 3);
-	conf->res_y = ft_skip_atoi(&line);
+	conf->res_y = (uint16_t)ft_skip_atoi(&line);
 	while (ft_isspace(*line))
 		line++;
 	if (*line)

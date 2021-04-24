@@ -2,14 +2,14 @@
 
 int	do_graphic_shit(t_overall *x)
 {
-	t_img	*img;
+	t_img	*x_img;
 
-	img = x->img;
-	if (img->img == NULL)
+	x_img = x->x_img;
+	if (x_img->img == NULL)
 		exit_error("When alloc memory", x->conf, 5);
-	fill_img(x, x->conf->ceiling);
+	fill_img(x_img, x->conf->ceiling);	
 	print_minimap(x);
-	mlx_put_image_to_window(x->mlx, x->win, img->img, 0, 0);
+	mlx_put_image_to_window(x->mlx, x->win, x_img->img, 0, 0);
 	return (0);
 }
 
@@ -23,27 +23,27 @@ void	put_pixel(t_img *data, int pos_x, int pos_y, int rgb)
 	*(unsigned int *)dst = rgb;
 }
 
-void	fill_row(t_overall *x, int pos_y, int rgb)
+void	fill_row(t_img *img, int pos_y, int rgb)
 {
 	int i;
 	
 	i = -1;
-	while (x->conf->res_x > ++i)
-		put_pixel(x->img, i, pos_y, rgb);
+	while (img->line_len > ++i)
+		put_pixel(img, i, pos_y, rgb);
 }
 
-void	fill_img(t_overall *x, int rgb)
+void	fill_img(t_img *img, int rgb)
 {
 	int *ip;
 	int k;
 
-	ip = (int *)x->img->addr;
-	k = x->conf->res_x * x->conf->res_y;
+	ip = (int *)img->addr;
+	k = img->size / 4;
 	while (k--)
 		ip[k] = rgb;
 }
 
-void	draw_rectangle(t_overall *x, int sizex, int sizey, int rgb)
+void	draw_rectangle(t_img *x, int sizex, int sizey, int rgb)
 {
 	int i;
 
@@ -51,7 +51,7 @@ void	draw_rectangle(t_overall *x, int sizex, int sizey, int rgb)
 	{
 		i = sizex;
 		while (i--)
-			put_pixel(x->img, x->px.cur_x + i, x->px.cur_y + sizey, rgb);
+			put_pixel(x, x->pxx + i, x->pxy + sizey, rgb);
 	}
 }
 
