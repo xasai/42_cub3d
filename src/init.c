@@ -11,8 +11,7 @@ void	init(int ac, char **av)
 	if (!x.mlx)
 		exit_error("When allocate memory", x.conf, 2);
 	init_resolution(&x);
-	init_image(&(x.x_img), &x, x.conf->res_x, x.conf->res_y);
-	x.win = mlx_new_window(x.mlx, x.conf->res_x, x.conf->res_y, "cub3D");
+	init_image(&(x.img), &x, x.conf->res_x, x.conf->res_y); x.win = mlx_new_window(x.mlx, x.conf->res_x, x.conf->res_y, "cub3D");
 	init_hook(&x);
 	do_graphic_shit(&x);
 	mlx_loop(x.mlx);

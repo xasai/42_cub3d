@@ -106,9 +106,9 @@ int					matrix_clear(char **matrix, size_t i);
 */
 int					do_graphic_shit(t_overall *x);
 void				put_pixel(t_img *data, int pos_x, int pos_y, int rgb);
-void				fill_row(t_img *img, int pos_y, int rgb);
-void				fill_img(t_img *img, int rgb);
-void				draw_rectangle(t_img *x, int sizex, int sizey, int rgb);
+void				fill_row(t_overall *x, int pos_y, int rgb);
+void				fill_img(t_overall *x, int rgb);
+void				draw_rectangle(t_overall *x, int sizex, int sizey, int rgb);
 
 /*
 **============================================================

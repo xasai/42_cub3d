@@ -56,9 +56,6 @@ typedef struct		s_img
 	int				line_len;
 	int				endian;
 	size_t			size;
-	short int		pxx;
-	short int		pxy;
-	short int		rgb;
 }					t_img;
 
 #endif
