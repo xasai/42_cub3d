@@ -56,6 +56,16 @@ typedef struct		s_img
 	int				line_len;
 	int				endian;
 	size_t			size;
+	size_t			size_x;
+	size_t			size_y;
 }					t_img;
+
+typedef struct s_ray
+{
+    float angle;
+    float distance;
+    float cx;
+    float cy;
+}               t_ray;
 
 #endif

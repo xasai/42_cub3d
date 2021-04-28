@@ -7,7 +7,8 @@ int	do_graphic_shit(t_overall *x)
 	img = x->img;
 	if (img->img == NULL)
 		exit_error("When alloc memory", x->conf, 5);
-	fill_img(x, x->conf->ceiling);
+	fill_img(x, 0x000000);
+	draw_rays_3d(x);
 	print_minimap(x);
 	mlx_put_image_to_window(x->mlx, x->win, img->img, 0, 0);
 	return (0);
@@ -16,7 +17,7 @@ int	do_graphic_shit(t_overall *x)
 void	put_pixel(t_img *data, int pos_x, int pos_y, int rgb)
 {
 	char	*dst;
-
+	
 	if (pos_x < 0 || pos_y < 0)
 		return ;
 	dst = data->addr + (pos_y * data->line_len + pos_x * (data->bpp / 8));
@@ -54,4 +55,3 @@ void	draw_rectangle(t_overall *x, int sizex, int sizey, int rgb)
 			put_pixel(x->img, x->pxx + i, x->pxy + sizey, rgb);
 	}
 }
-

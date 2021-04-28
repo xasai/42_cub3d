@@ -1,14 +1,11 @@
-R 680  480 
+R  999 999
 
 
-NO .texture/.png
-SO .texture/.png
-WE .texture/.png
-EA .texture/.png
-S  .texture/.png
-
-
-
+NO .texture/1.xpm
+SO .texture/eagle.xpm
+WE .texture/grey_stone.xpm
+EA .texture/fuhrer.xpm
+S  .texture/pillar.xpm
 
 
 
@@ -22,8 +19,11 @@ S  .texture/.png
 
 
 
-F 220,100,0
-C 207,74,123
+
+
+
+F 11, 117, 50 
+C 168, 41, 194 
 
 1111111111111
 1000000000201

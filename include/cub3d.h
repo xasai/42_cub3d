@@ -112,6 +112,35 @@ void				draw_rectangle(t_overall *x, int sizex, int sizey, int rgb);
 
 /*
 **============================================================
+**						GRAPHIX/DRAW_LINES	
+*/
+void				v_line(t_overall *x, size_t height, int rgb);
+void				h_line(t_overall *x, size_t lenght, int rgb);
+void				texture_line(t_img *textr, t_overall *x, \
+					size_t height, size_t pxx);
+void				fill_updown(t_overall *x, size_t height);
+
+/*
+**============================================================
+**						GRAPHIX/DRAW_LINES	
+*/
+void				test_xpm(t_overall *x);
+/*
+**============================================================
+**						GRAPHIX/RAY_ENGINE
+*/
+void				draw_rays_3d(t_overall *z);
+void				draw_ray(t_overall* z, t_ray ray, size_t i);
+
+/*
+**============================================================
+**						GRAPHIX/TEXTURES
+*/
+void 				load_textures(t_overall *x);
+void 				file_to_img(t_img **ptr, char *path, t_overall *x);
+
+/*
+**============================================================
 **						minimap.c
 */
 void				print_minimap(t_overall *x);

@@ -20,6 +20,8 @@ void 	init_image(t_img **img_ptr, t_overall *x, \
 	(*img_ptr)->addr = mlx_get_data_addr((*img_ptr)->img, \
 						&(*img_ptr)->bpp, &(*img_ptr)->line_len, \
 						&(*img_ptr)->endian);
+	(*img_ptr)->size_y = size_y;
+	(*img_ptr)->size_x = size_x;
 	(*img_ptr)->size = (size_t)(size_y * size_x) * ((*img_ptr)->bpp / 8);
 }
 
@@ -42,5 +44,8 @@ void	init_resolution(t_overall *x)
 		*cur_y = sizey;
 		*cur_x = sizex;
 	}
-	x->scale = 1;
+	if (sizex >= sizey)
+		x->scale = (float)sizey / (float)sizex;
+	else
+		x->scale = (float)sizex / (float)sizey; 
 }

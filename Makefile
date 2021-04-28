@@ -14,7 +14,7 @@ OBJPATH := obj/
 OBJDIR := $(subst src/, obj/, $(shell find src/* -type d))
 																   
 CC := gcc
-FLAG := -Wall -Wextra -Werror -g3 -std=c99						   
+FLAG := -Wall -Wextra -Werror -g3 -O3 -std=c99						   
 ####################################################################
 
 

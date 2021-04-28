@@ -1,30 +1,53 @@
 #include "cub3d.h"
+#define FOV 0.66f
 
-void	draw_ray_2d(t_overall *z)
+void	draw_rays_3d(t_overall *z)
 {
-	float ray_a;
 	size_t i;
-	size_t line_height;
+	t_ray ray;
+	float acos;
+	float asin;
 
 	i = 0;
 	while (i < z->conf->res_x)
 	{
-		ray_a = z->map->hero_a -  0.66 / 2 + 0.66 * i / (float)(z->conf->res_x); 
-		for (double c=0;c < 10; c+=0.0005)
+		ray.angle = z->map->hero_a - FOV / 2 + FOV * i / (float)(z->conf->res_x); 
+		ray.distance= 0;
+		acos = cos(ray.angle);
+		asin = sin(ray.angle);
+		while (ray.distance < 15)
 		{
-			float x = z->map->hero_x + c*cos(ray_a);
-			float y = z->map->hero_y + c*sin(ray_a);
-			if (z->map->matrix[(int)y][(int)x] != '0')
+			ray.cx = z->map->hero_x + ray.distance * acos;
+			ray.cy = z->map->hero_y + ray.distance * asin;
+			if (z->map->matrix[(int)ray.cy][(int)ray.cx] != '0')
 			{
-				line_height = z->conf->res_y / (c * cos(ray_a - z->map->hero_a));
-				//printf("(%u / %f) = %lu\n", z->conf->res_y, c, line_height);
-				z->pxx = i;
-				z->pxy = z->conf->res_y / 2 - line_height / 2;
-				v_line(z, line_height, 0xac18de); 
-				break;
+				draw_ray(z, ray, i);
+				break ;
 			}
-			//put_pixel(z->img, x * 32, y * 32, 0xff0000);
+			ray.distance += 0.005;
 		}
 		i++;
 	}
+}
+
+void	draw_ray(t_overall *z, t_ray ray, size_t i)
+{
+	size_t line_height;
+	float hitx;
+	float hity;
+	int x_textr; 
+
+	line_height = z->conf->res_y / (ray.distance * cos(ray.angle - z->map->hero_a));
+	z->pxx = i;
+	z->pxy = z->conf->res_y / 2 - line_height / 2;
+	hitx = ray.cx - floor(ray.cx + 0.5);
+	hity = ray.cy - floor(ray.cy + 0.5);
+	x_textr = hitx * z->nswe_img[0]->size_x;
+	if (fabs(hity) > fabs(hitx))
+		x_textr = hity * z->nswe_img[0]->size_x;
+	if (x_textr < 0)
+		x_textr += z->nswe_img[0]->size_x;
+	texture_line(z->nswe_img[0], z, line_height, x_textr);
+	if (line_height < (size_t)z->conf->res_y - 1)
+		fill_updown(z, line_height);
 }

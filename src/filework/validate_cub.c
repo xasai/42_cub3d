@@ -59,6 +59,8 @@ int			validate_updown(t_map *map, size_t x, size_t y)
 		map->hero_y = (double)y + 0.50;
 		map->hero_a = (*hero == 'N') * N + (*hero == 'S') * S
 			+ (*hero == 'W') * W + (*hero == 'E') * E;
+		map->plane_x = (*hero == 'N') * 0.66 + (*hero == 'S') * -0.66;
+		map->plane_y = (*hero == 'W') * -0.66 + (*hero == 'E') * 0.66;
 		map->matrix[y][x] = '0';
 		map->hero_dx = cos(map->hero_a);
 		map->hero_dy = sin(map->hero_a);

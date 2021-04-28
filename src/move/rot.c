@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-#define ROT_SPEED PI / 20
+#define ROT_SPEED PI / 10
 
 void	rot_l(t_overall *x)
 {
